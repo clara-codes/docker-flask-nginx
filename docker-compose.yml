@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  order-api-db:
+    image: postgres:11
+    container_name: order-api-db
+    environment:
+      POSTGRES_DB: ClaraChallenge
+      POSTGRES_USER: clara
+      POSTGRES_PASSWORD: clara2020
+    ports:
+      - 8888:5432
+  order-api-app:
+    image: order-api:latest
+    container_name: order-api-app
+    ports:
+    - target: 80
+      published: 8080
+      protocol: tcp
+      mode: host
+    environment:
+      DB_HOST: order-api-db
+      DB_PORT: 5432
+    depends_on:
+      - order-api-db
+    command: ["bash", "start.sh"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/hello"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
