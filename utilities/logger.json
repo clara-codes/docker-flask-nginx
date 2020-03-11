@@ -1,0 +1,48 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+        "simple": {
+            "format": "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s"
+        }
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "formatter": "simple",
+            "stream": "ext://sys.stdout"
+        },
+
+        "info_file_rotating_handler": {
+            "level": "INFO",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "info_rotate.log",
+            "maxBytes": 5242880,
+            "backupCount": 3,
+            "formatter": "simple"
+        },
+
+        "error_file_rotating_handler": {
+            "level": "ERROR",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": "error_rotate.log",
+            "maxBytes": 5242880,
+            "backupCount": 3,
+            "formatter": "simple"
+        }
+    },
+
+    "loggers": {
+        "flask_order_app": {
+            "level": "DEBUG",
+            "handlers": ["console", "info_file_rotating_handler", "error_file_rotating_handler"]
+        },
+
+        "integration_test": {
+            "level": "DEBUG",
+            "handlers": ["console", "info_file_rotating_handler", "error_file_rotating_handler"]
+        }
+    }
+}

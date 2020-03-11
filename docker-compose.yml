@@ -20,6 +20,9 @@ services:
     environment:
       DB_HOST: order-api-db
       DB_PORT: 5432
+      DB_USERNAME: clara
+      DB_PASSWORD: clara2020
+      DB_NAME: ClaraChallenge
     depends_on:
       - order-api-db
     command: ["bash", "start.sh"]

@@ -8,15 +8,20 @@ RUN apt-get update && apt-get install -y vim \
 
 RUN rm -rf /var/lib/apt/list/*
 
+COPY requirements.txt .
+RUN python -m pip install -r requirements.txt
+
 COPY nginx.conf /etc/nginx
 COPY uwsgi.ini .
 COPY start.sh .
 RUN chmod +x start.sh
 
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+ENV PYTHONPATH "/home:${PYTHONPATH}"
 
 COPY wsgi.py .
+COPY Makefile .
+COPY utilities ./utilities
 COPY app ./app
+COPY tests ./tests
 
 CMD bash start.sh
