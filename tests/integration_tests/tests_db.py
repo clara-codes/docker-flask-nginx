@@ -1,8 +1,9 @@
 import unittest, os, json
 from utilities.logger import get_logger
+from app.settings import TEST_DIR
 from app.models import create_db_if_not_exists, db_connect, create_tables, DeclarativeBase, BaseModel, Order
 
-logger = get_logger('integration_test')
+logger = get_logger('test')
 
 class DataBaseInitilizationTestCase(unittest.TestCase):
 
@@ -22,7 +23,7 @@ class DataBaseInitilizationTestCase(unittest.TestCase):
 		}
 
 		cls.table_names = DeclarativeBase.metadata.tables.keys()
-		with open('/home/tests/integration_tests/tests_db_schema.json') as f:
+		with open(os.path.join(TEST_DIR, 'support', 'tests_db_schema.json')) as f:
 			cls.test_db_schema = json.loads(f.read())
 			cls.test_db_schema = {table_name: cls.test_db_schema[table_name] for table_name in cls.table_names}
 
@@ -32,14 +33,19 @@ class DataBaseInitilizationTestCase(unittest.TestCase):
 		Tear down database after testcase finish.
 		"""
 		db_config = cls.global_db_config.copy()
+		#connect to postgres to drop table TestDB.
 		db_config['database'] = 'postgres'
 		engine = db_connect(db_config=db_config)
 		conn = engine.connect()
+		#prevent fulture connection to TestDB
+		conn.execute("""REVOKE CONNECT ON DATABASE "%s" FROM public;""" % (cls.db_test_name,))
+		#terminal all connections to TestDB
+		conn.execute("""SELECT pid, pg_terminate_backend(pid) FROM pg_stat_activity \
+			WHERE datname = '%s' AND pid <> pg_backend_pid();""" % (cls.db_test_name,))
 		conn.execute("commit")
-		conn.execute("""DROP DATABASE IF EXISTS "%s";""" % cls.db_test_name) #run outside of transaction block
+		conn.execute("""DROP DATABASE IF EXISTS "%s";""" % (cls.db_test_name,)) #run outside of transaction block
 		conn.close()
 		engine.dispose()
-		logger.info('SQLAlchemy engine disposed.')
 		logger.info('End of %s , database: %s has been torn down.' % (cls.__name__, cls.db_test_name))
 
 	def _test_create_db_if_not_exists(self):
@@ -53,8 +59,6 @@ class DataBaseInitilizationTestCase(unittest.TestCase):
 		db_names = [dict(i)['datname'] for i in result]
 		result.close()
 		conn.close()
-		engine.dispose()
-		logger.info('SQLAlchemy engine disposed.')
 		created_db = self.db_test_name in db_names
 		self.assertEqual(created_db, True)
 
@@ -70,8 +74,6 @@ class DataBaseInitilizationTestCase(unittest.TestCase):
 		db_names = [dict(i)['datname'] for i in result]
 		result.close()
 		conn.close()
-		engine.dispose()
-		logger.info('SQLAlchemy engine disposed.')
 		created_db = self.db_test_name in db_names
 		self.assertEqual(created_db, True)
 
@@ -86,19 +88,17 @@ class DataBaseInitilizationTestCase(unittest.TestCase):
 		(Schema definition to validate against is defined in tests_db_schema.json,
 		update accordingly to testing for any changes in schema.)
 		"""
-		create_tables(db_connect(db_config=self.global_db_config))
 		engine = db_connect(db_config=self.global_db_config)
+		create_tables(engine)
 		conn = engine.connect()
 		for table_name in self.table_names:
-			result = conn.execute("""SELECT * FROM information_schema.columns WHERE table_name = '%s';""" % table_name)
+			result = conn.execute("""SELECT * FROM information_schema.columns WHERE table_name = '%s';""" % (table_name,))
 			schema = [dict(item) for item in result]
 			result.close()
 			#a and b have the same elements in the same number, regardless of their order.
 			self.assertCountEqual(schema, self.test_db_schema[table_name])
 		conn.close()
-		engine.dispose()
 
 
 if __name__ == '__main__':
     unittest.main()
-    spark.stop()

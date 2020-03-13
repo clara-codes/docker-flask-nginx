@@ -1,0 +1,69 @@
+{
+   "success":
+   {
+      "request_body": {
+         "units":"metric",
+         "origins": ["59.456399", "24.707580"],
+         "destinations": ["59.436487", "24.747193"],
+         "key":"AIzaSyBxCH4rp-utoHHRzxUhEEKfcRog4bL-E54"
+      },
+   
+      "response_body": 
+      {
+         "destination_addresses": [
+            "Viru tänav 4, 10140 Tallinn, Estonia"
+         ],
+         "origin_addresses": [
+            "Nõlva 9, 10416 Tallinn, Estonia"
+         ],
+         "rows": [
+            {
+               "elements": [
+                  {
+                     "distance": {
+                        "text": "4.1 km",
+                        "value": 4105
+                     },
+                     "duration": {
+                        "text": "12 mins",
+                        "value": 696
+                     },
+                     "status": "OK"
+                  }
+               ]
+            }
+         ],
+         "status": "OK",
+         "mock": "True"
+      }
+   },
+
+   "fail": {
+      "request_body": {
+         "units":"metric",
+         "origins": ["-5009.456399", "400.707580", "-abcd.707580"],
+         "destinations": ["5009.436487", "-2004.747193"],
+         "key":"AIzaSyBxCH4rp-utoHHRzxUhEEKfcRog4bL-E54"
+      },
+
+      "response_body": {
+         "destination_addresses": [
+            ""
+         ],
+         "origin_addresses": [
+            ""
+         ],
+         "rows": [
+            {
+               "elements": [
+                  {
+                     "status": "NOT_FOUND"
+                  }
+               ]
+            }
+         ],
+         "status": "OK",
+         "mock": "True"
+      }
+   }
+}

@@ -23,6 +23,8 @@ services:
       DB_USERNAME: clara
       DB_PASSWORD: clara2020
       DB_NAME: ClaraChallenge
+      GMAP_TOKEN: <YOUR GOOGLE MAP API KEY>
+      GMAP_DISTANCE_MATRIX_API: https://maps.googleapis.com/maps/api/distancematrix/json
     depends_on:
       - order-api-db
     command: ["bash", "start.sh"]

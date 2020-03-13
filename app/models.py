@@ -14,7 +14,7 @@ from utilities.logger import get_logger
 
 DeclarativeBase = declarative_base()
 
-logger = get_logger('flask_order_app')
+logger = get_logger('database')
 
 global_db_config = settings.DATABASE
 
@@ -28,9 +28,7 @@ def create_db_if_not_exists(db_config=None):
 		engine = create_engine(URL(**db_config))
 		conn = engine.connect()
 		conn.close()
-		engine.dispose()
 		logger.info('Database connection to database: %s successfully made.' % db_config['database'])
-		logger.info('SQLAlchemy engine disposed.')
 	except OperationalError as e:
 		logger.info('OperationalError exception caught in database connection - %s.' % e)
 		if not db_config:
@@ -43,9 +41,9 @@ def create_db_if_not_exists(db_config=None):
 		conn.execute("commit")
 		conn.execute("""CREATE DATABASE "%s";""" % db_to_create) #execute outside of transaction block.
 		conn.close()
-		engine.dispose()
 		logger.info("Database created: %s" % db_to_create)
-		logger.info('SQLAlchemy engine disposed.')
+		engine.dispose()
+		logger.info("Disposed engine of 'postgres' db, expects to no longer be connected to it.")
 	return
 
 def db_connect(db_config=None):
@@ -66,8 +64,6 @@ def create_tables(engine):
     """
     DeclarativeBase.metadata.create_all(engine)
     logger.info('Created tables if not exist.')
-    engine.dispose()
-    logger.info('SQLAlchemy engine disposed.')
 
 class utcnow(expression.FunctionElement):
 	type = DateTime()

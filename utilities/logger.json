@@ -40,7 +40,12 @@
             "handlers": ["console", "info_file_rotating_handler", "error_file_rotating_handler"]
         },
 
-        "integration_test": {
+        "database": {
+            "level": "DEBUG",
+            "handlers": ["console", "info_file_rotating_handler", "error_file_rotating_handler"]
+        },
+
+        "test": {
             "level": "DEBUG",
             "handlers": ["console", "info_file_rotating_handler", "error_file_rotating_handler"]
         }

@@ -17,11 +17,13 @@ COPY start.sh .
 RUN chmod +x start.sh
 
 ENV PYTHONPATH "/home:${PYTHONPATH}"
+ENV BASEDIR "/home"
 
 COPY wsgi.py .
 COPY Makefile .
 COPY utilities ./utilities
 COPY app ./app
 COPY tests ./tests
+COPY unit_test.env .
 
 CMD bash start.sh
