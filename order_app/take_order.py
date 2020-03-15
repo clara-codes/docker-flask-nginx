@@ -5,7 +5,7 @@ from flask_inputs.validators import JsonSchema
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 from utilities.logger import get_logger
-from app.models import db_connect, Order
+from order_app.models import db_connect, Order
 
 logger = get_logger('flask_order_app')
 
@@ -72,8 +72,8 @@ class TakeOrder():
 				order = order_query.one()
 				if not order.status == 'TAKEN':
 					order.status = self.request.json['status']
-					logger.info("Order (id: %s) status is sucessfully updated to %s." % (order.id, order.status))
 					session.commit() #commit update, release row lock
+					logger.info("Order (id: %s) status is sucessfully updated to %s." % (order.id, order.status))
 					success = True
 				else:
 					err_msg = "Order is already taken."

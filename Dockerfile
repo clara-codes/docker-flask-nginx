@@ -22,7 +22,7 @@ ENV BASEDIR "/home"
 COPY wsgi.py .
 COPY Makefile .
 COPY utilities ./utilities
-COPY app ./app
+COPY order_app ./order_app
 COPY tests ./tests
 COPY unit_test.env .
 

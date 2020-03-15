@@ -1,5 +1,4 @@
 from locust import HttpLocust, TaskSet, task, between
-from app.settings import TEST_DIR
 import os, json
 
 class OrderBehavior(TaskSet):

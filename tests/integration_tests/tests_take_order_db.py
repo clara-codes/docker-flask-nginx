@@ -2,8 +2,8 @@ import unittest, os
 from unittest.mock import Mock, patch
 from sqlalchemy.orm import sessionmaker
 from utilities.logger import get_logger
-from app.take_order import TakeOrder
-from app.models import create_db_if_not_exists, db_connect, create_tables, Order
+from order_app.take_order import TakeOrder
+from order_app.models import create_db_if_not_exists, db_connect, create_tables, Order
 
 logger = get_logger('test')
 
@@ -31,13 +31,13 @@ class TakeOrderDBTestCase(unittest.TestCase):
 		cls.engine = db_connect(db_config=cls.global_db_config)
 		create_tables(cls.engine)
 
-		#start mocking db_connect bahavior to connect to TestDB in app.place_order
-		cls.mock_db_connect_patcher = patch('app.place_order.db_connect')
+		#start mocking db_connect bahavior to connect to TestDB in order_app.take_order
+		cls.mock_db_connect_patcher = patch('order_app.take_order.db_connect')
 		cls.mock_db_connect = cls.mock_db_connect_patcher.start()
 		cls.mock_db_connect.return_value = cls.engine
 
 		#start mocking the request object of PlceOrder
-		cls.mock_request_patcher = patch('app.place_order.request')
+		cls.mock_request_patcher = patch('order_app.take_order.request')
 		cls.mock_request = cls.mock_request_patcher.start()
 
 	@classmethod
@@ -47,8 +47,8 @@ class TakeOrderDBTestCase(unittest.TestCase):
 		Tear down database after testcase finish.
 		"""
 		#stop mocking
-		cls.mock_db_connect.stop()
-		cls.mock_request.stop()
+		cls.mock_db_connect_patcher.stop()
+		cls.mock_request_patcher.stop()
 
 		db_config = cls.global_db_config.copy()
 		#connect to postgres DB to drop DB TestDB.

@@ -7,22 +7,26 @@ from sqlalchemy.types import DateTime
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.engine.url import URL
 from sqlalchemy import create_engine
+from flask_sqlalchemy import SQLAlchemy
 
 import datetime
-from app import settings
+from order_app import settings
+from order_app.settings import app
 from utilities.logger import get_logger
 
-DeclarativeBase = declarative_base()
+DeclarativeBase = declarative_base() #For SQLAlchemy (can make use of SQLAlchemy sessions, row lock etc.)
 
 logger = get_logger('database')
 
 global_db_config = settings.DATABASE
 
+db = SQLAlchemy(app) #For Flask
+
 def create_db_if_not_exists(db_config=None):
 	"""
 	Create Database if not exists, using postgres default user. 
 	"""
-	try: #Test if connects to app-specific database successfully
+	try: #Test if connects to order_app-specific database successfully
 		if not db_config:
 			db_config = global_db_config.copy()
 		engine = create_engine(URL(**db_config))
@@ -86,7 +90,7 @@ class BaseModel(object):
 		server_onupdate=utcnow(), nullable=False)
 
 
-class Order(BaseModel, DeclarativeBase):
+class Order(BaseModel, DeclarativeBase, db.Model):
 	"""Schema logic for Order table."""
 	id = Column(Integer, primary_key=True)
 	distance = Column('distance', Integer, nullable=False)

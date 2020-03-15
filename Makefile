@@ -7,6 +7,7 @@ test-integration:
 	python tests/integration_tests/tests_db.py
 	python tests/integration_tests/tests_place_order_db.py
 	python tests/integration_tests/tests_take_order_db.py
+	python tests/integration_tests/tests_order_list_db.py
 test-unit:
 	export $(shell sed 's/=.*//' unit_test.env)
 	python tests/unit_tests/tests_place_order.py

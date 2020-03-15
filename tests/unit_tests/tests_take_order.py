@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 from utilities.logger import get_logger
-from app.take_order import TakeOrder
+from order_app.take_order import TakeOrder
 
 logger = get_logger('test')
 
@@ -12,17 +12,17 @@ class TakeOrderTestCase(unittest.TestCase):
 		"""
 		Start all mocking necessary for testing.
 		"""
-		#mock orm db_connect before any reference to app.place_order
-		#start mocking create_engine behavior in app.place_order.engine
-		cls.mock_engine_patcher = patch('app.take_order.db_connect')
+		#mock orm db_connect before any reference to order_app.place_order
+		#start mocking create_engine behavior in order_app.place_order.engine
+		cls.mock_engine_patcher = patch('order_app.take_order.db_connect')
 		cls.mock_engine = cls.mock_engine_patcher.start()
 
-		#start mocking sessionmaker behavior in apps.place_order
-		cls.mock_sessionmaker_patcher = patch('app.take_order.sessionmaker')
+		#start mocking sessionmaker behavior in order_app.place_order
+		cls.mock_sessionmaker_patcher = patch('order_app.take_order.sessionmaker')
 		cls.mock_sessionmaker = cls.mock_sessionmaker_patcher.start()
 
 		#start mocking the request object of PlceOrder
-		cls.mock_request_patcher = patch('app.take_order.request')
+		cls.mock_request_patcher = patch('order_app.take_order.request')
 		cls.mock_request = cls.mock_request_patcher.start()
 
 	@classmethod

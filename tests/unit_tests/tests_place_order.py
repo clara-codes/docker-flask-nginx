@@ -1,9 +1,9 @@
 import unittest, json, os
 from unittest.mock import Mock, patch
 from utilities.logger import get_logger
-from app.settings import TEST_DIR
-from app.place_order import PlaceOrder
-from app import place_order
+from order_app.settings import TEST_DIR
+from order_app.place_order import PlaceOrder
+from order_app import place_order
 
 logger = get_logger('test')
 
@@ -23,21 +23,21 @@ class PlaceOrderTestCase(unittest.TestCase):
 		cls.origins = cls.predefined_gmap_resp['success']['request_body']['origins']
 		cls.destinations = cls.predefined_gmap_resp['success']['request_body']['destinations']
 
-		#mock orm db_connect before any reference to app.place_order
-		#start mocking create_engine behavior in app.place_order.engine
-		cls.mock_engine_patcher = patch('app.place_order.db_connect')
+		#mock orm db_connect before any reference to order_app.place_order
+		#start mocking create_engine behavior in order_app.place_order.engine
+		cls.mock_engine_patcher = patch('order_app.place_order.db_connect')
 		cls.mock_engine = cls.mock_engine_patcher.start()
 
 		#start mocking sessionmaker behavior in apps.place_order
-		cls.mock_sessionmaker_patcher = patch('app.place_order.sessionmaker')
+		cls.mock_sessionmaker_patcher = patch('order_app.place_order.sessionmaker')
 		cls.mock_sessionmaker = cls.mock_sessionmaker_patcher.start()
 
 		#start mocking the request object of PlceOrder
-		cls.mock_request_patcher = patch('app.place_order.request')
+		cls.mock_request_patcher = patch('order_app.place_order.request')
 		cls.mock_request = cls.mock_request_patcher.start()
 
 		#start mocking requests.get behavior in app.place_order
-		cls.mock_get_patcher = patch('app.place_order.requests.get')
+		cls.mock_get_patcher = patch('order_app.place_order.requests.get')
 		cls.mock_get = cls.mock_get_patcher.start()
 
 
@@ -158,6 +158,7 @@ class PlaceOrderTestCase(unittest.TestCase):
 		"""
 		Test if validate_latlng_range can correctly validate args(float) ragne. 
 		"""
+		#success case
 		self.mock_request.return_value = Mock()
 		self.mock_request.json = {
 			'origin': self.origins,
@@ -169,7 +170,7 @@ class PlaceOrderTestCase(unittest.TestCase):
 		validated, err_msg = order.validate_latlng_range()
 		self.assertEqual(validated, True)
 		self.assertEqual(err_msg, None)
-
+		#fail case
 		test_err_msg = "Wrong input, origin latitude: 33333.0, destination latitude: 99999.0 must be within range. -90<=latitude<=90, -180<=longitude<= 180."
 		self.mock_request.return_value = Mock()
 		self.mock_request.json = {

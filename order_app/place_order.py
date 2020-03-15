@@ -4,8 +4,8 @@ from flask_inputs import Inputs
 from flask_inputs.validators import JsonSchema
 from sqlalchemy.orm import sessionmaker
 from utilities.logger import get_logger
-from app.settings import GMAP_TOKEN, GMAP_DISTANCE_MATRIX_API
-from app.models import db_connect, Order
+from order_app.settings import GMAP_TOKEN, GMAP_DISTANCE_MATRIX_API
+from order_app.models import db_connect, Order
 
 logger = get_logger('flask_order_app')
 
@@ -138,13 +138,14 @@ class PlaceOrder():
 		try:
 			session.add(new_order)
 			session.commit()
-			logger.info("Inserted new order with id %s, distance %s and status %s." % (new_order.id, new_order.distance, new_order.status))
 			new_order_item['id'] = new_order.id
 			new_order_item['distance'] = new_order.distance
 			new_order_item['status'] = new_order.status
-		except:
+			logger.info("Inserted new order with id %s, distance %s and status %s." % (new_order.id, new_order.distance, new_order.status))
+		except Exception as e:
 			session.rollback()
 			logger.error("Roll back insert new order.")
+			logger.error(e)
 			err_msg = "New order cannot be created."
 		finally: 
 			session.close()

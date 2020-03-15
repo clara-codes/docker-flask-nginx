@@ -1,7 +1,7 @@
 import unittest, os, json
 from utilities.logger import get_logger
-from app.settings import TEST_DIR
-from app.models import create_db_if_not_exists, db_connect, create_tables, DeclarativeBase, BaseModel, Order
+from order_app.settings import TEST_DIR
+from order_app.models import create_db_if_not_exists, db_connect, create_tables, DeclarativeBase, BaseModel, Order
 
 logger = get_logger('test')
 

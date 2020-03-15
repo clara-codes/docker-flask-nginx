@@ -1,4 +1,5 @@
-import os
+import os 
+from flask import Flask
 
 DATABASE = {
     'drivername': 'postgresql',
@@ -8,6 +9,15 @@ DATABASE = {
     'password': os.getenv('DB_PASSWORD'),
     'database': os.getenv('DB_NAME')
 }
+
+app = Flask(__name__)
+app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = "%s://%s:%s@%s:%s/%s" % (
+	DATABASE['drivername'], DATABASE['username'], 
+	DATABASE['password'], DATABASE['host'], 
+	DATABASE['port'], DATABASE['database']
+	)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 GMAP_TOKEN = os.getenv("GMAP_TOKEN")
 GMAP_DISTANCE_MATRIX_API = os.getenv("GMAP_DISTANCE_MATRIX_API")
