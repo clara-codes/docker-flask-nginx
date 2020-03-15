@@ -4,7 +4,7 @@ services:
     image: postgres:11
     container_name: order-api-db
     environment:
-      POSTGRES_DB: ClaraChallenge
+      POSTGRES_DB: ClaraOrder
       POSTGRES_USER: clara
       POSTGRES_PASSWORD: clara2020
     ports:
@@ -22,14 +22,14 @@ services:
       DB_PORT: 5432
       DB_USERNAME: clara
       DB_PASSWORD: clara2020
-      DB_NAME: ClaraChallenge
+      DB_NAME: ClaraOrder
       GMAP_TOKEN: <YOUR GOOGLE MAP API KEY>
       GMAP_DISTANCE_MATRIX_API: https://maps.googleapis.com/maps/api/distancematrix/json
     depends_on:
       - order-api-db
     command: ["bash", "start.sh"]
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/hello"]
+      test: ["CMD", "curl", "-f", "http://localhost/healthcheck"]
       interval: 1m30s
       timeout: 10s
       retries: 3

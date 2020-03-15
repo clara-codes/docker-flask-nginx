@@ -1,6 +1,8 @@
 include unit_test.env
+BUILD_TARGET=builder
+
 image:
-	docker build -t order-api .
+	docker build  --target ${BUILD_TARGET} -t order-api .
 docker-compose:
 	docker-compose --file docker-compose.yml up -d
 test-integration:
