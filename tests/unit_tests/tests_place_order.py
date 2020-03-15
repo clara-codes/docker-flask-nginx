@@ -7,9 +7,6 @@ from app import place_order
 
 logger = get_logger('test')
 
-{
-  "error": "14.70758 is not of type 'string'"
-}
 
 class PlaceOrderTestCase(unittest.TestCase):
 
@@ -51,7 +48,8 @@ class PlaceOrderTestCase(unittest.TestCase):
 		"""
 		cls.mock_engine.stop()
 		cls.mock_sessionmaker.stop()
-		cls.mock_get_patcher.stop()
+		cls.mock_request.stop()
+		cls.mock_get.stop()
 
 	def setUp(self):
 		"""
@@ -62,7 +60,7 @@ class PlaceOrderTestCase(unittest.TestCase):
 		self.mock_engine.return_value = Mock()
 		self.mock_sessionmaker.return_value = Mock()
 
-	def test_input_validation(self):
+	def test_place_order_input_validation(self):
 		"""
 		Test if CoordinateInputs jsonschema validation can correctly valid request.json.
 		"""

@@ -1,5 +1,5 @@
 import json, requests
-from flask import Flask, escape, request, jsonify
+from flask import request
 from flask_inputs import Inputs
 from flask_inputs.validators import JsonSchema
 from sqlalchemy.orm import sessionmaker
@@ -62,8 +62,6 @@ class PlaceOrder():
 		self.gmap_unit = 'metric'
 		self.gmap_key = GMAP_TOKEN
 		self.gmap_url = GMAP_DISTANCE_MATRIX_API
-		self.engine = db_connect()
-		self.Session = sessionmaker(bind=self.engine)
 
 
 	def validate_latlng_range(self):
@@ -127,10 +125,12 @@ class PlaceOrder():
 		Insert new order into Order table. Return dict of the newly inserted order.
 		Roll back if exception caught.
 		"""
+		engine = db_connect()
+		Session = sessionmaker(bind=engine)
 		item = {
 			'distance': distance
 		}
-		session = self.Session() # invokes sessionmaker.__call__()
+		session = Session() # invokes sessionmaker.__call__()
 		logger.info("Created database session.")
 		new_order = Order(**item)
 		new_order_item = {}
@@ -149,6 +149,7 @@ class PlaceOrder():
 		finally: 
 			session.close()
 			logger.info("Closed database session.")
+		engine.dispose() # Prevent OperationalError: (psycopg2.OperationalError) FATAL:  sorry, too many clients already
 		return new_order_item, err_msg
 
 	def run_place_order(self):
@@ -161,10 +162,10 @@ class PlaceOrder():
 		new_order_item = None
 		err_msg = None
 		if self.inputs.validate():
-			self.origin_lat = float(self.request.get_json()['origin'][0])
-			self.origin_lng = float(self.request.get_json()['origin'][1])
-			self.destination_lat = float(self.request.get_json()['destination'][0])
-			self.destination_lng = float(self.request.get_json()['destination'][1])
+			self.origin_lat = float(self.request.json['origin'][0])
+			self.origin_lng = float(self.request.json['origin'][1])
+			self.destination_lat = float(self.request.json['destination'][0])
+			self.destination_lng = float(self.request.json['destination'][1])
 			validated, err_msg = self.validate_latlng_range()
 			if validated:
 				distance, err_msg = self.get_distance()

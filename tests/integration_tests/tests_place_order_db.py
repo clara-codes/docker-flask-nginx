@@ -59,6 +59,7 @@ class PlaceOrderDBTestCase(unittest.TestCase):
 		"""
 		#stop mocking
 		cls.mock_db_connect.stop()
+		cls.mock_request.stop()
 		cls.mock_get.stop()
 
 		db_config = cls.global_db_config.copy()
