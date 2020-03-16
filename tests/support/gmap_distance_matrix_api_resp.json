@@ -4,8 +4,7 @@
       "request_body": {
          "units":"metric",
          "origins": ["59.456399", "24.707580"],
-         "destinations": ["59.436487", "24.747193"],
-         "key":"AIzaSyBxCH4rp-utoHHRzxUhEEKfcRog4bL-E54"
+         "destinations": ["59.436487", "24.747193"]
       },
    
       "response_body": 
@@ -42,8 +41,7 @@
       "request_body": {
          "units":"metric",
          "origins": ["-5009.456399", "400.707580", "-abcd.707580"],
-         "destinations": ["5009.436487", "-2004.747193"],
-         "key":"AIzaSyBxCH4rp-utoHHRzxUhEEKfcRog4bL-E54"
+         "destinations": ["5009.436487", "-2004.747193"]
       },
 
       "response_body": {
