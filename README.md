@@ -128,7 +128,7 @@ All routes of the endpoints are defined in */orders/views.py*
 
 Use case: users to place an order.
 
- I use the [Google Map Distance Matrix API ](https://cloud.google.com/maps-platform/routes/) to find the distance between origin and destination. The API key can be set in */docker-compose.yml* `GMAP_TOKEN`.
+ I use the [Google Map Distance Matrix API ](https://cloud.google.com/maps-platform/routes/) to find the distance between origin and destination. The API key can be set in */docker-compose.yml* `GMAP_TOKEN`. Without a valid token, HTTP 400 will be raised by the endpoint since distance cannot be retrieved from the Google Map Distance Matrix API.
 
 Request body example:
 
