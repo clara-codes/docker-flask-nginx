@@ -72,7 +72,7 @@ class TakeOrderDBTestCase(unittest.TestCase):
 		"""
 		Session = sessionmaker(bind=self.engine)
 		session = Session()
-		new_order = Order({'distance':111})
+		new_order = Order(**{'distance':111})
 		try:
 			session.add(new_order)
 			session.commit()
@@ -93,7 +93,7 @@ class TakeOrderDBTestCase(unittest.TestCase):
 		self.assertEqual(success, True)
 		self.assertEqual(err_msg is None, True)
 
-	def tests_update_order_status(self):
+	def tests_update_order_status_fail(self):
 		"""
 		Test if error message is thrown if trying to update an already taken order.
 		"""
