@@ -183,6 +183,8 @@ The functions to this endpoint can be found in `order_app/take_order.py`. Both u
 
 ❌ !!! IMPORTANT: You should do the load testing by spinning up the containers with **connection to a Test Database**,  since there is no mocking involved! You can change the connection to a test database instead in *docker-compose.yml*. Also be mindful of the Google Map Distance Matrix API (used in Place Order) call limit when doing load testing.
 
+Prerequisite: [locust](https://locust.io/). You can install the version that's used here with `pip install locustio==0.14.5`
+
 The load test can be started with: 
 
 ```shell
@@ -261,7 +263,7 @@ $ docker run -it <name of image> bash
 And this will bring you to an interactive bash session, then you can just run:
 
 ```shell
-$ make test-uni
+$ make test-unit
 ```
 
 I use python [unittest](https://docs.python.org/3/library/unittest.html) framework to write the tests. And you can run all the unit tests `unittest.TestCase` in make target: `test-unit`. Optionally, one can group `unittest.TestCase` that should be run together.
@@ -292,7 +294,7 @@ Directory: /tests/integration_tests/load_tests/
 I use load test here to expose the concurrency problem, and test the service on handling concurrent requests. To start the load test:
 
 ```shell
-$ make load test
+$ make test-load
 ```
 
 All executions of the load tests can be executed with make target: `make test-load` (as described earlier under section - Endpoint). No mocking is involved for load testing, so one should configure (in /*docker-compose.yml*) the running service to be tested with connection to a Test Database. Load test is only implemented for endpoints: `GET /orders` and `PATCH /order/:id`, since high request traffic is expected only for these 2 endpoints.
